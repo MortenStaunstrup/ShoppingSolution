@@ -1,0 +1,784 @@
+{
+  "info": {
+    "_postman_id": "d17ad04e-ed37-4a32-9944-8624a2c44311",
+    "name": "ECommerceIntegrationTests",
+    "description": "Integration test collection for Users, Payments, and Orders Web APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49882595",
+    "_collection_link": "https://go.postman.co/collection/49882595-d17ad04e-ed37-4a32-9944-8624a2c44311?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Users API",
+      "item": [
+        {
+          "name": "Get All Users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response is an array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrlUsers}}/api/users",
+              "host": [
+                "{{baseUrlUsers}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('User created successfully', () => pm.response.to.have.status(201));",
+                  "const jsonData = pm.response.json();",
+                  "pm.environment.set('userId', jsonData.id);",
+                  "pm.test('User ID saved', () => pm.expect(pm.environment.get('userId')).to.exist);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Hanna\", \"email\": \"han@gmail.com\"}"
+            },
+            "url": {
+              "raw": "{{baseUrlUsers}}/api/users",
+              "host": [
+                "{{baseUrlUsers}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "const jsonData = pm.response.json();",
+                  "pm.test('Correct user returned', () => pm.expect(jsonData.id).to.eql(Number(pm.environment.get('userId'))));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrlUsers}}/api/users/{{userId}}",
+              "host": [
+                "{{baseUrlUsers}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "{{userId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payments API",
+      "item": [
+        {
+          "name": "Get All Payments",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response is an array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrlPayments}}/api/payments",
+              "host": [
+                "{{baseUrlPayments}}"
+              ],
+              "path": [
+                "api",
+                "payments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Payment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Payment created successfully', () => pm.response.to.have.status(201));",
+                  "const payment = pm.response.json();",
+                  "pm.environment.set('paymentId', payment.id);",
+                  "pm.test('Payment ID saved', () => pm.expect(pm.environment.get('paymentId')).to.exist);",
+                  "pm.test('Payment should be successful', () => pm.expect(payment.status).to.eql('Success'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\": \"{{userId}}\", \"amount\": 200.0}"
+            },
+            "url": {
+              "raw": "{{baseUrlPayments}}/api/payments",
+              "host": [
+                "{{baseUrlPayments}}"
+              ],
+              "path": [
+                "api",
+                "payments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "const jsonData = pm.response.json();",
+                  "pm.test('Correct payment returned', () => pm.expect(jsonData.id).to.eql(Number(pm.environment.get('paymentId'))));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrlPayments}}/api/payments/{{paymentId}}",
+              "host": [
+                "{{baseUrlPayments}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "{{paymentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check Payment Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status endpoint works', () => pm.response.to.have.status(200));",
+                  "const status = pm.response.json();",
+                  "pm.test('Payment should be successful', () => pm.expect(status.success).to.be.true);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrlPayments}}/api/payments/{{paymentId}}/status",
+              "host": [
+                "{{baseUrlPayments}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "{{paymentId}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Orders API",
+      "item": [
+        {
+          "name": "Get All Orders",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Response is an array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrlOrders}}/api/orders",
+              "host": [
+                "{{baseUrlOrders}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Order created successfully', () => pm.response.to.have.status(201));",
+                  "const order = pm.response.json();",
+                  "pm.environment.set('orderId', order.id);",
+                  "pm.test('Order ID saved', () => pm.expect(pm.environment.get('orderId')).to.exist);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"userId\": \"{{userId}}\", \"paymentId\": \"{{paymentId}}\", \"total\": 200.0}"
+            },
+            "url": {
+              "raw": "{{baseUrlOrders}}/api/orders",
+              "host": [
+                "{{baseUrlOrders}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', () => pm.response.to.have.status(200));",
+                  "const jsonData = pm.response.json();",
+                  "pm.test('Order belongs to correct user', () => pm.expect(jsonData.userId).to.eql(Number(pm.environment.get('userId'))));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrlOrders}}/api/orders/{{orderId}}",
+              "host": [
+                "{{baseUrlOrders}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "{{orderId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Scenario",
+      "item": [
+        {
+          "name": "Create valid user -> create valid payment -> create valid order",
+          "item": [
+            {
+              "name": "Create user",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('User created successfully', () => pm.response.to.have.status(201));",
+                      "const jsonData = pm.response.json();",
+                      "pm.environment.set('userId', jsonData.id);",
+                      "pm.test('User ID saved', () => pm.expect(pm.environment.get('userId')).to.exist);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"name\": \"Morten\", \"email\": \"mort490f@gmail.com\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrlUsers}}/api/users",
+                  "host": [
+                    "{{baseUrlUsers}}"
+                  ],
+                  "path": [
+                    "api",
+                    "users"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create payment",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Payment created successfully', () => pm.response.to.have.status(201));",
+                      "const payment = pm.response.json();",
+                      "pm.environment.set('paymentId', payment.id);",
+                      "pm.test('Payment ID saved', () => pm.expect(pm.environment.get('paymentId')).to.exist);",
+                      "pm.test('Payment should be successful', () => pm.expect(payment.status).to.eql('Success'));"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": \"{{userId}}\", \"amount\": 675.0}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrlPayments}}/api/payments",
+                  "host": [
+                    "{{baseUrlPayments}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Order",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Order created successfully', () => pm.response.to.have.status(201));",
+                      "const order = pm.response.json();",
+                      "pm.environment.set('orderId', order.id);",
+                      "pm.test('Order ID saved', () => pm.expect(pm.environment.get('orderId')).to.exist);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": \"{{userId}}\", \"paymentId\": \"{{paymentId}}\", \"total\": 675.0}"
+                },
+                "url": {
+                  "raw": "{{baseUrlOrders}}/api/orders",
+                  "host": [
+                    "{{baseUrlOrders}}"
+                  ],
+                  "path": [
+                    "api",
+                    "orders"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create valid user -> create invalid payment -> Order returns 400 bad request",
+          "item": [
+            {
+              "name": "Create User",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('User created successfully', () => pm.response.to.have.status(201));",
+                      "const jsonData = pm.response.json();",
+                      "pm.environment.set('userId', jsonData.id);",
+                      "pm.test('User ID saved', () => pm.expect(pm.environment.get('userId')).to.exist);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"name\": \"Hanna\", \"email\": \"han@gmail.com\"}"
+                },
+                "url": {
+                  "raw": "{{baseUrlUsers}}/api/users",
+                  "host": [
+                    "{{baseUrlUsers}}"
+                  ],
+                  "path": [
+                    "api",
+                    "users"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Invalid Paymen",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Payment created successfully', () => pm.response.to.have.status(201));",
+                      "const payment = pm.response.json();",
+                      "pm.environment.set('paymentId', payment.id);",
+                      "pm.test('Payment ID saved', () => pm.expect(pm.environment.get('paymentId')).to.exist);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": \"{{userId}}\", \"amount\": 0}"
+                },
+                "url": {
+                  "raw": "{{baseUrlPayments}}/api/payments",
+                  "host": [
+                    "{{baseUrlPayments}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Order fails",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Order bad request', () => pm.response.to.have.status(400));"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": \"{{userId}}\", \"paymentId\": \"{{paymentId}}\", \"total\": 200.0}"
+                },
+                "url": {
+                  "raw": "{{baseUrlOrders}}/api/orders",
+                  "host": [
+                    "{{baseUrlOrders}}"
+                  ],
+                  "path": [
+                    "api",
+                    "orders"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Check payment status after creation",
+          "item": [
+            {
+              "name": "Create Payment",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Payment created successfully', () => pm.response.to.have.status(201));",
+                      "var payment = pm.response.json();",
+                      "pm.test('Payment should be successful', () => pm.expect(payment.status).to.eql('Success'));"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": \"{{userId}}\", \"amount\": 200.0}"
+                },
+                "url": {
+                  "raw": "{{baseUrlPayments}}/api/payments",
+                  "host": [
+                    "{{baseUrlPayments}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get list of all orders",
+          "item": [
+            {
+              "name": "Return list of orders",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Staus code is 200\", () => pm.response.to.have.status(200))",
+                      "var list = pm.response.json();",
+                      "pm.test(\"Response is not empty\", () => pm.expect(list).to.not.be.empty)",
+                      "pm.test(\"Response contains an array\", () => pm.expect(list).to.be.an('array'))"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrlOrders}}/api/orders",
+                  "host": [
+                    "{{baseUrlOrders}}"
+                  ],
+                  "path": [
+                    "api",
+                    "orders"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create order with missing paymentId",
+          "item": [
+            {
+              "name": "Create order with missing paymentId",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Returns bad request', () => pm.response.to.have.status(400));"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"userId\": \"{{userId}}\", \"paymentId\": \"\", \"total\": 200.0}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrlOrders}}/api/orders",
+                  "host": [
+                    "{{baseUrlOrders}}"
+                  ],
+                  "path": [
+                    "api",
+                    "orders"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
