@@ -44,7 +44,7 @@ jobs:
           echo "Starting OrdersWebAPI..."
           dotnet run --project OrdersWebAPI/OrdersWebAPI.csproj &
           echo "Starting PaymentsWebAPI..."
-          dotnet run --project PaymentsWebAPI/PaymentsWebAPI.csproj &
+          dotnet run --project PaymentWebAPI/PaymentWebAPI.csproj &
           echo "Waiting for APIs to start..."
           sleep 20 # adjust depending on how long your APIs take to start
 
